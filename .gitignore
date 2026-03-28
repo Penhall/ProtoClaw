@@ -17,3 +17,10 @@ out/
 # OS
 .DS_Store
 Thumbs.db
+
+workspaces/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+dist/
+.env
