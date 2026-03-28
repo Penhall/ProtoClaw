@@ -1,0 +1,27 @@
+# AGENTS.md — Manual Operacional: {{ agent_name }}
+
+## Identidade
+- **Nome:** {{ agent_name }}
+- **Objetivo:** {{ primary_objective }}
+
+## Fluxo de Trabalho
+{% for task in subtasks %}
+### Etapa {{ loop.index }}: {{ task.description }}
+- Tipo: {{ task.type }}
+- Critério de conclusão: {{ task.completion_criteria }}
+{% endfor %}
+
+## Regras de Foco (NÃO NEGOCIÁVEIS)
+{% for rule in guardrails %}
+{{ loop.index }}. {{ rule }}
+{% endfor %}
+
+## Escopo Permitido
+Apenas ações diretamente relacionadas a: **{{ primary_objective }}**
+
+## Escopo Proibido
+Qualquer ação não relacionada à missão acima. Responda sempre:
+"Estou configurado apenas para: {{ primary_objective }}"
+
+---
+_Gerado automaticamente pelo ProtoClaw._

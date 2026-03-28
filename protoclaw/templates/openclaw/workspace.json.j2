@@ -1,0 +1,7 @@
+{
+  "name": "{{ agent_name }}",
+  "model": "{{ model | default('claude-opus-4-6') }}",
+  "channels": {{ channels | tojson(indent=2) }},
+  "skills": {{ skills | tojson(indent=2) }},
+  "focus": "{{ primary_objective }}"
+}

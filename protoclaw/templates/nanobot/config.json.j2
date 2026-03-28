@@ -1,0 +1,7 @@
+{
+  "agent_name": "{{ agent_name }}",
+  "objective": "{{ primary_objective }}",
+  "model": "{{ model | default('claude-opus-4-6') }}",
+  "guardrails": {{ guardrails | tojson(indent=2) }},
+  "subtasks": {{ subtasks | tojson(indent=2) }}
+}
