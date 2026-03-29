@@ -1,0 +1,22 @@
+services:
+  protoclaw:
+    build: .
+    volumes:
+      - ./workspaces:/app/workspaces
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+
+  ollama:
+    image: ollama/ollama
+    profiles:
+      - local-llm
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  ollama_data:
