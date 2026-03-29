@@ -1,11 +1,12 @@
 import os
 from langchain_core.language_models import BaseChatModel
 from langchain_anthropic import ChatAnthropic
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 
 
 def build_llm() -> BaseChatModel:
-    """Build LLM with fallback chain: Claude → OpenAI → Ollama."""
+    """Build LLM with fallback chain: Claude → OpenAI → Gemini → Ollama."""
     providers: list[BaseChatModel] = []
 
     if os.getenv("ANTHROPIC_API_KEY"):
@@ -13,6 +14,14 @@ def build_llm() -> BaseChatModel:
 
     if os.getenv("OPENAI_API_KEY"):
         providers.append(ChatOpenAI(model="gpt-4o"))
+
+    if os.getenv("GOOGLE_API_KEY"):
+        providers.append(
+            ChatGoogleGenerativeAI(
+                model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
+                google_api_key=os.getenv("GOOGLE_API_KEY"),
+            )
+        )
 
     # Ollama: always available as zero-cost local fallback
     providers.append(
