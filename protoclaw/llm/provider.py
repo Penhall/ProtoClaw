@@ -15,11 +15,13 @@ def build_llm() -> BaseChatModel:
     if os.getenv("OPENAI_API_KEY"):
         providers.append(ChatOpenAI(model="gpt-4o"))
 
-    if os.getenv("GOOGLE_API_KEY"):
+    if os.getenv("GOOGLE_AI_API_KEY"):
         providers.append(
             ChatGoogleGenerativeAI(
-                model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
-                google_api_key=os.getenv("GOOGLE_API_KEY"),
+                model=os.getenv("GOOGLE_AI_MODEL", "gemini-3.1-flash"),
+                google_api_key=os.getenv("GOOGLE_AI_API_KEY"),
+                temperature=float(os.getenv("GOOGLE_AI_TEMPERATURE", "0.4")),
+                max_output_tokens=int(os.getenv("GOOGLE_AI_MAX_TOKENS", "200")),
             )
         )
 
