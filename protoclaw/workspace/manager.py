@@ -1,4 +1,5 @@
 import re
+import shutil
 from datetime import datetime
 from pathlib import Path
 
@@ -23,6 +24,8 @@ def setup_workspace(
     workspace_dir = WORKSPACES_ROOT / f"{slug}-{date_str}"
 
     WORKSPACES_ROOT.mkdir(parents=True, exist_ok=True)
+    if workspace_dir.exists():
+        shutil.rmtree(workspace_dir)
     git.Repo.clone_from(_REPOS[framework], workspace_dir, depth=1)
 
     for filename, content in generated_files.items():
