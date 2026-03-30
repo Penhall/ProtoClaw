@@ -2,20 +2,29 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 
 from protoclaw.llm.provider import build_llm
+from protoclaw.llm.parsing import strip_to_json
 from protoclaw.orchestrator.state import ProtoclawState
 
-_PROMPT = ChatPromptTemplate.from_template(
-    "Você é um especialista em decomposição de tarefas para agentes de IA.\n\n"
-    "Missão: {mission}\n\n"
-    "Decomponha em 4-8 subtarefas claras e executáveis. Cada subtarefa deve ser atômica e verificável.\n\n"
-    "Responda APENAS com JSON válido:\n"
-    '{{"subtasks": [{{"description": "...", "type": "sequential|parallel", '
-    '"completion_criteria": "..."}}]}}'
-)
+_PROMPT = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        "You are a task decomposition expert for AI agents. "
+        "CRITICAL: respond with ONLY valid JSON — no introduction, no explanation, "
+        "no markdown fences. Start your response directly with { and end with }.",
+    ),
+    (
+        "human",
+        "Mission: {mission}\n\n"
+        "Decompose into 4-8 clear, executable subtasks. Each must be atomic and verifiable.\n\n"
+        "Return ONLY this JSON structure:\n"
+        '{{"subtasks": [{{"description": "...", "type": "sequential|parallel", '
+        '"completion_criteria": "..."}}]}}',
+    ),
+])
 
 
 def _build_chain():
-    return _PROMPT | build_llm() | JsonOutputParser()
+    return _PROMPT | build_llm() | strip_to_json | JsonOutputParser()
 
 
 def decompose_node(state: ProtoclawState) -> dict:

@@ -4,21 +4,30 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 
 from protoclaw.llm.provider import build_llm
+from protoclaw.llm.parsing import strip_to_json
 from protoclaw.orchestrator.state import ProtoclawState
 
-_PROMPT = ChatPromptTemplate.from_template(
-    "Você é especialista em segurança e foco de agentes de IA.\n\n"
-    "Missão: {mission}\n"
-    "Subtarefas: {subtasks}\n\n"
-    "Gere 5-8 guardrails (regras de foco) rígidas e específicas.\n"
-    "Cada guardrail deve ser uma proibição clara que evita desvio de escopo.\n\n"
-    "Responda APENAS com JSON válido:\n"
-    '{{"guardrails": ["Regra proibitiva clara"]}}'
-)
+_PROMPT = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        "You are an AI agent safety and focus expert. "
+        "CRITICAL: respond with ONLY valid JSON — no introduction, no explanation, "
+        "no markdown fences. Start your response directly with { and end with }.",
+    ),
+    (
+        "human",
+        "Mission: {mission}\n"
+        "Subtasks: {subtasks}\n\n"
+        "Generate 5-8 strict, specific guardrails (focus rules). "
+        "Each must be a clear prohibition that prevents scope deviation.\n\n"
+        "Return ONLY this JSON structure:\n"
+        '{{"guardrails": ["Clear prohibitive rule"]}}',
+    ),
+])
 
 
 def _build_chain():
-    return _PROMPT | build_llm() | JsonOutputParser()
+    return _PROMPT | build_llm() | strip_to_json | JsonOutputParser()
 
 
 def guardrails_node(state: ProtoclawState) -> dict:
