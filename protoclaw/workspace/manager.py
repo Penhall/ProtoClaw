@@ -1,9 +1,20 @@
+import os
 import re
 import shutil
+import stat
 from datetime import datetime
 from pathlib import Path
 
 import git
+
+
+def _force_remove(path: Path) -> None:
+    """Remove directory tree, handling Windows read-only files in .git/."""
+    def _on_error(func, fpath, _exc):
+        os.chmod(fpath, stat.S_IWRITE)
+        func(fpath)
+
+    shutil.rmtree(path, onexc=_on_error)
 
 WORKSPACES_ROOT = Path(__file__).parent.parent.parent / "workspaces"
 
@@ -25,7 +36,7 @@ def setup_workspace(
 
     WORKSPACES_ROOT.mkdir(parents=True, exist_ok=True)
     if workspace_dir.exists():
-        shutil.rmtree(workspace_dir)
+        _force_remove(workspace_dir)
     git.Repo.clone_from(_REPOS[framework], workspace_dir, depth=1)
 
     for filename, content in generated_files.items():
