@@ -10,8 +10,8 @@ _TEMPLATES_DIR = Path(__file__).parent.parent.parent / "templates" / "nanobot"
 
 
 def _slug(text: str) -> str:
-    text = re.sub(r"[^\w\s-]", "", text.lower())
-    return re.sub(r"[\s_]+", "-", text).strip("-")[:40]
+    text = re.sub(r"[^a-z0-9\s-]", "", text.lower())
+    return re.sub(r"[\s_-]+", "-", text).strip("-")[:40]
 
 
 def generate_nanobot_node(state: ProtoclawState) -> dict:

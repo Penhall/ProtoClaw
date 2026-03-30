@@ -77,7 +77,8 @@ def _ensure_network(client: docker.DockerClient, network_name: str) -> None:
 def deploy_agent(framework: str, workspace_dir: str, agent_name: str) -> str:
     """Deploy agent container on remote or local Docker. Returns container ID."""
     network = os.getenv("PROTOCLAW_NETWORK", "protoclaw-net")
-    slug = re.sub(r"[^\w-]", "-", agent_name)[:40]
+    slug = re.sub(r"[^a-z0-9-]", "-", agent_name.lower())
+    slug = re.sub(r"-+", "-", slug).strip("-")[:40]
     container_name = f"protoclaw-{slug}"
 
     info = _ssh_info()

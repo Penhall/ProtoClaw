@@ -31,7 +31,8 @@ def setup_workspace(
 ) -> str:
     """Clone target repo and inject generated config files. Returns workspace path string."""
     date_str = datetime.now().strftime("%Y%m%d")
-    slug = re.sub(r"[^\w-]", "-", agent_name)[:40]
+    slug = re.sub(r"[^a-z0-9-]", "-", agent_name.lower())
+    slug = re.sub(r"-+", "-", slug).strip("-")[:40]
     workspace_dir = WORKSPACES_ROOT / f"{slug}-{date_str}"
 
     WORKSPACES_ROOT.mkdir(parents=True, exist_ok=True)
