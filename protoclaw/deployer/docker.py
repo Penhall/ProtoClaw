@@ -36,13 +36,22 @@ def _make_ssh(info: dict) -> paramiko.SSHClient:
     return client
 
 
+def _sftp_makedirs(sftp: paramiko.SFTPClient, path: str) -> None:
+    """Create all directories in path, like mkdir -p."""
+    parts = [p for p in path.split("/") if p]
+    current = ""
+    for part in parts:
+        current = f"{current}/{part}"
+        try:
+            sftp.mkdir(current)
+        except OSError:
+            pass  # already exists
+
+
 def _sftp_upload(sftp: paramiko.SFTPClient, local: Path, remote: str) -> None:
     """Recursively upload local directory to remote path, skipping .git and target."""
     _SKIP = {".git", "target", "__pycache__", ".pytest_cache"}
-    try:
-        sftp.mkdir(remote)
-    except OSError:
-        pass
+    _sftp_makedirs(sftp, remote)
     for item in local.iterdir():
         if item.name in _SKIP:
             continue
