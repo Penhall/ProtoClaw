@@ -1,7 +1,18 @@
 {
-  "agent_name": "{{ agent_name }}",
-  "objective": "{{ primary_objective }}",
-  "model": "{{ model | default('claude-opus-4-6') }}",
-  "guardrails": {{ guardrails | tojson(indent=2) }},
-  "subtasks": {{ subtasks | tojson(indent=2) }}
+  "agents": {
+    "defaults": {
+      "model": "{{ model | default('claude-opus-4-6') }}"
+    }
+  },
+  "providers": {
+    "anthropic": {
+      "apiKey": "{{ anthropic_api_key | default('') }}"
+    },
+    "openai": {
+      "apiKey": "{{ openai_api_key | default('') }}"
+    },
+    "gemini": {
+      "apiKey": "{{ google_ai_api_key | default('') }}"
+    }
+  }
 }

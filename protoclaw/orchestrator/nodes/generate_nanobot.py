@@ -26,6 +26,7 @@ def generate_nanobot_node(state: ProtoclawState) -> dict:
         "model": os.getenv("PROTOCLAW_MODEL", "claude-opus-4-6"),
         "anthropic_api_key": os.getenv("ANTHROPIC_API_KEY", ""),
         "openai_api_key": os.getenv("OPENAI_API_KEY", ""),
+        "google_ai_api_key": os.getenv("GOOGLE_AI_API_KEY", ""),
     }
 
     files: dict[str, str] = {}
