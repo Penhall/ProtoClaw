@@ -26,9 +26,10 @@ def build_llm() -> BaseChatModel:
         )
 
     # Ollama: always available as zero-cost local fallback
+    ollama_host = os.getenv("OLLAMA_HOST", "http://localhost:11434")
     providers.append(
         ChatOpenAI(
-            base_url="http://localhost:11434/v1",
+            base_url=f"{ollama_host}/v1",
             model=os.getenv("OLLAMA_MODEL", "llama3"),
             api_key="ollama",
         )
