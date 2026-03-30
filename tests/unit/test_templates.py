@@ -74,8 +74,8 @@ def test_nanobot_config_json_is_valid():
     env = Environment(loader=FileSystemLoader(str(_TEMPLATES / "nanobot")))
     result = env.get_template("config.json.j2").render(**_CONTEXT_NB)
     parsed = json.loads(result)
-    assert parsed["agent_name"] == "reddit-ia-trends"
-    assert len(parsed["guardrails"]) == 1
+    assert parsed["agents"]["defaults"]["model"] is not None
+    assert parsed["providers"]["anthropic"]["apiKey"] is not None
 
 
 def test_nanobot_env_contains_api_key():

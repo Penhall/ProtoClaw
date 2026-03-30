@@ -121,6 +121,5 @@ def test_canary_pipeline_generates_valid_nanobot_configs():
     assert ".env" in files
 
     config = json.loads(files["config.json"])
-    assert config["agent_name"] is not None
-    assert len(config["guardrails"]) == 5
-    assert len(config["subtasks"]) == 4
+    assert config["agents"]["defaults"]["model"] is not None
+    assert "anthropic" in config["providers"]

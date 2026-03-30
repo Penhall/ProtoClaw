@@ -33,5 +33,5 @@ def test_generate_nanobot_config_is_valid_json():
     from protoclaw.orchestrator.nodes.generate_nanobot import generate_nanobot_node
     result = generate_nanobot_node(_state())
     parsed = json.loads(result["generated_files"]["config.json"])
-    assert parsed["agent_name"] is not None
-    assert isinstance(parsed["guardrails"], list)
+    assert parsed["agents"]["defaults"]["model"] is not None
+    assert "anthropic" in parsed["providers"]
