@@ -10,7 +10,7 @@ _PROMPT = ChatPromptTemplate.from_messages([
         "system",
         "You are a task decomposition expert for AI agents. "
         "CRITICAL: respond with ONLY valid JSON — no introduction, no explanation, "
-        "no markdown fences. Start your response directly with { and end with }.",
+        "no markdown fences. Start your response directly with {{ and end with }}.",
     ),
     (
         "human",
