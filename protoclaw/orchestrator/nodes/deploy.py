@@ -6,8 +6,8 @@ from protoclaw.workspace.manager import setup_workspace
 
 
 def _slug(text: str) -> str:
-    text = re.sub(r"[^\w\s-]", "", text.lower())
-    return re.sub(r"[\s_]+", "-", text).strip("-")[:40]
+    text = re.sub(r"[^a-z0-9\s-]", "", text.lower())
+    return re.sub(r"[\s_-]+", "-", text).strip("-")[:40]
 
 
 def deploy_node(state: ProtoclawState) -> dict:

@@ -111,12 +111,16 @@ def deploy_agent(framework: str, workspace_dir: str, agent_name: str) -> str:
             if code != 0:
                 raise RuntimeError(f"docker build failed (exit {code}):\n{out}\n{err}")
 
+            # Allocate a host port: base 3100 + hash to avoid collisions
+            host_port = 3100 + (hash(slug) % 900)
+
             # Run container — mount config.json at nanobot's expected path
             code, out, err = _exec(
                 ssh,
                 f"docker run -d --name {container_name} "
                 f"--network {network} "
                 f"--restart unless-stopped "
+                f"-p {host_port}:3000 "
                 f"-v {remote_ws}/config.json:/root/.nanobot/config.json:ro "
                 f"{image_tag} 2>&1",
             )
